@@ -1,0 +1,259 @@
+
+version: '3.8'
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: testdb
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+    command: --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # MySQL Exporter
+  mysql_exporter:
+    image: prom/mysqld-exporter:latest
+    container_name: mysql_exporter
+    environment:
+      DATA_SOURCE_NAME: "exporter:exporterpass@(mysql:3306)/"
+    ports:
+      - "9104:9104"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  # MariaDB Database
+  mariadb:
+    image: mariadb:11
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: testdb
+    ports:
+      - "3307:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./mariadb/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # MariaDB Exporter
+  mariadb_exporter:
+    image: prom/mysqld-exporter:latest
+    container_name: mariadb_exporter
+    environment:
+      DATA_SOURCE_NAME: "exporter:exporterpass@(mariadb:3306)/"
+    ports:
+      - "9105:9104"
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      POSTGRES_PASSWORD: rootpass
+      POSTGRES_DB: testdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # PostgreSQL Exporter
+  postgres_exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    container_name: postgres_exporter
+    environment:
+      DATA_SOURCE_NAME: "postgresql://exporter:exporterpass@postgres:5432/testdb?sslmode=disable"
+    ports:
+      - "9187:9187"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # SQL Server Database
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: YourStrong!Passw0rd
+      MSSQL_PID: Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+      - ./mssql/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "YourStrong!Passw0rd" -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+
+  # SQL Server Init Helper
+  mssql_init:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql_init
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: YourStrong!Passw0rd
+    volumes:
+      - ./mssql/init:/scripts
+    depends_on:
+      mssql:
+        condition: service_healthy
+    command: ["/scripts/01_init.sh"]
+    restart: "no"
+
+  # SQL Server Exporter
+  mssql_exporter:
+    image: prometheuscommunity/mssql-exporter:latest
+    container_name: mssql_exporter
+    environment:
+      SQLSERVER_CONNECTION_STRING: "sqlserver://sa:YourStrong!Passw0rd@mssql:1433?database=master"
+    ports:
+      - "9214:9214"
+    depends_on:
+      mssql:
+        condition: service_healthy
+
+  # Node Exporter
+  node_exporter:
+    image: prom/node-exporter:latest
+    container_name: node_exporter
+    ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+
+  # cAdvisor
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    ports:
+      - "8080:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    privileged: true
+    devices:
+      - /dev/kmsg
+
+  # Prometheus
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    depends_on:
+      - mysql_exporter
+      - mariadb_exporter
+      - postgres_exporter
+      - mssql_exporter
+      - node_exporter
+      - cadvisor
+
+  # Grafana
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    depends_on:
+      - prometheus
+
+  # NestJS Ingestion App
+  nest:
+    build:
+      context: ./nest-ingest
+      dockerfile: Dockerfile
+    container_name: nest_ingest
+    ports:
+      - "4000:4000"
+    environment:
+      PORT: 4000
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_USER: root
+      MYSQL_PASS: rootpass
+      MYSQL_DB: testdb
+      MARIADB_HOST: mariadb
+      MARIADB_PORT: 3306
+      MARIADB_USER: root
+      MARIADB_PASS: rootpass
+      MARIADB_DB: testdb
+      PG_HOST: postgres
+      PG_PORT: 5432
+      PG_USER: postgres
+      PG_PASS: rootpass
+      PG_DB: testdb
+      MSSQL_HOST: mssql
+      MSSQL_PORT: 1433
+      MSSQL_USER: sa
+      MSSQL_PASS: YourStrong!Passw0rd
+      MSSQL_DB: testdb
+    depends_on:
+      mysql:
+        condition: service_healthy
+      mariadb:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      mssql:
+        condition: service_healthy
+
+volumes:
+  mysql_data:
+  mariadb_data:
+  postgres_data:
+  mssql_data:
+  prometheus_data:
+  grafana_data:
