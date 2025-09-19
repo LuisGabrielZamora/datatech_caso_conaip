@@ -112,7 +112,7 @@ sudo apt-get install -y certbot python3-certbot-nginx
 
 sudo certbot --nginx \
   -d api.thorium-technologies.com \
-  --redirect --agree-tos -m admin@holcimmexico.com
+  --redirect --agree-tos -m admin@thorium-technologies.com
 
 # Verify Nginx picks up the new certs
 sudo nginx -t && sudo systemctl reload nginx
