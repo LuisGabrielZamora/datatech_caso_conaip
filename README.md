@@ -1,29 +1,100 @@
 
-# Database Observability Stack
+# DataTech CONAIP Project
+
+A comprehensive technology stack comprising database observability tools and a production-ready project management API. This project demonstrates modern DevOps practices, database monitoring, and enterprise-grade API development.
+
+## 🏗️ Project Structure
+
+This repository contains two main components:
+
+### 1. 📊 Database Observability Stack
 
 A comprehensive local development stack for testing database ingestion performance and observability. Includes MySQL, MariaDB, PostgreSQL, SQL Server with their Prometheus exporters, plus Prometheus, Grafana, and a NestJS ingestion testing application.
 
-## Prerequisites
+### 2. 🚀 Project Management API
 
-- Docker
-- Docker Compose
+A production-ready NestJS REST API for managing projects, tasks, employees, clients, and assignments. Features include JWT authentication, role-based access control, comprehensive API documentation, and PostgreSQL integration.
 
-## Quick Start
+**🔗 Live API Documentation:** [https://api.thorium-technologies.com/api/docs](https://api.thorium-technologies.com/api/docs)
 
-1. Clone or extract this project
-2. Navigate to the project directory:
+## 📋 Prerequisites
+
+- Docker & Docker Compose
+- Node.js 18+ (for local development)
+- pnpm (for package management)
+
+## 🚀 Quick Start
+
+### Option 1: Database Observability Stack Only
+
+1. Clone this repository:
 
    ```bash
-   cd db-observability-stack
+   git clone <repository-url>
+   cd datatech_caso_conaip
    ```
 
-3. Start the entire stack:
+2. Start the observability stack:
 
    ```bash
    docker compose up -d --build
    ```
 
-## Services & URLs
+### Option 2: Project Management API Only
+
+1. Navigate to the API directory:
+
+   ```bash
+   cd project-management-api
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   pnpm install
+   ```
+
+3. Configure environment variables:
+
+   ```bash
+   cp .env.example .env
+   # Edit .env with your database configuration
+   ```
+
+4. Start the API:
+
+   ```bash
+   pnpm run start:dev
+   ```
+
+### Option 3: Full Stack (Recommended for Development)
+
+1. Start the database stack:
+
+   ```bash
+   docker compose -f docker-compose.pg-only.yml up -d
+   ```
+
+2. Start the Project Management API:
+
+   ```bash
+   cd project-management-api
+   pnpm install
+   pnpm run start:dev
+   ```
+
+## 🌐 Services & URLs
+
+### Project Management API
+
+| Service | URL | Description |
+|---------|-----|-------------|
+| **🔗 Production API** | [https://api.thorium-technologies.com](https://api.thorium-technologies.com) | Live production API |
+| **📚 API Documentation** | [https://api.thorium-technologies.com/api/docs](https://api.thorium-technologies.com/api/docs) | Interactive Swagger documentation |
+| **🔧 Local API** | <http://localhost:3000> | Local development server |
+| **📖 Local API Docs** | <http://localhost:3000/api/docs> | Local Swagger documentation |
+
+### Database Observability Stack
 
 | Service | URL | Credentials |
 |---------|-----|-------------|
@@ -54,7 +125,7 @@ The NestJS application provides an endpoint for testing database ingestion perfo
 
 ### Endpoint
 
-```
+``` bash
 POST /ingest
 ```
 
@@ -263,7 +334,7 @@ docker compose down --rmi all
 
 ## Architecture
 
-```
+``` bash
 ┌─────────────┐    ┌──────────────┐    ┌─────────────┐
 │   Grafana    │────│  Prometheus   │────│ Exporters    │
 │   :3000      │    │    :9090      │     │ 9104,9105    │
@@ -287,3 +358,49 @@ docker compose down --rmi all
 ```
 
 This stack provides comprehensive monitoring and testing capabilities for database ingestion performance across multiple database systems.
+
+---
+
+## 🚀 Project Management API
+
+For detailed information about the Project Management API, see the [Project Management API README](./project-management-api/README.md).
+
+### Quick API Overview
+
+The Project Management API is a production-ready NestJS application featuring:
+
+- **🔗 Live API:** [https://api.thorium-technologies.com](https://api.thorium-technologies.com)
+- **📚 Interactive Documentation:** [https://api.thorium-technologies.com/api/docs](https://api.thorium-technologies.com/api/docs)
+- **🔐 JWT Authentication** with role-based access control
+- **📊 Complete CRUD Operations** for projects, tasks, employees, clients, and assignments
+- **📄 Pagination Support** with configurable parameters (limit=10, page=0)
+- **🔍 Advanced Search & Filtering** across all entities
+- **🗄️ PostgreSQL Integration** with SSL support
+- **🐳 Docker Deployment** ready
+
+### API Endpoints
+
+| Module | Endpoint | Description |
+|--------|----------|-------------|
+| **Authentication** | `/api/auth` | User login, registration, and token management |
+| **Clients** | `/api/clients` | Client management operations |
+| **Employees** | `/api/employees` | Employee management and department filtering |
+| **Projects** | `/api/projects` | Project management and client relationships |
+| **Tasks** | `/api/tasks` | Task management with project/assignee filtering |
+| **Assignments** | `/api/assignments` | Project-employee assignment management |
+
+### Getting Started with the API
+
+1. **Access the live documentation:** [https://api.thorium-technologies.com/api/docs](https://api.thorium-technologies.com/api/docs)
+2. **Authenticate:** Use the `/api/auth/login` endpoint or the "Authorize" button in Swagger
+3. **Explore endpoints:** All endpoints support pagination with `limit`, `page`, and `search` parameters
+4. **Test locally:** Follow the setup guide in [project-management-api/README.md](./project-management-api/README.md)
+
+### Architecture Highlights
+
+- **Clean Architecture** with domain-driven design
+- **Hexagonal Architecture** pattern with clear separation of concerns
+- **TypeORM** for database operations with PostgreSQL
+- **Class Validation** for comprehensive input validation
+- **Swagger/OpenAPI** for interactive API documentation
+- **Role-based Security** with JWT token authentication

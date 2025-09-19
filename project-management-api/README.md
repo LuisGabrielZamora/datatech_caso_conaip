@@ -1,98 +1,275 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🚀 Project Management API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This project is developed and maintained by **Luis Gabriel Zamora Acevedo**, a candidate for the Bachelor’s degree in Computational Engineering at CONAIP.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+A production-ready NestJS REST API for comprehensive project management. Built with modern TypeScript, featuring JWT authentication, role-based access control, and complete CRUD operations for managing projects, tasks, employees, clients, and assignments.
 
-## Description
+## 🔗 Live API
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+**🌍 Production API:** [https://api.thorium-technologies.com](https://api.thorium-technologies.com)
 
-## Project setup
+**📚 Interactive API Documentation:** [https://api.thorium-technologies.com/api/docs](https://api.thorium-technologies.com/api/docs)
+
+## ✨ Features
+
+- 🔐 **JWT Authentication** - Secure token-based authentication
+- 👥 **Role-Based Access Control** - Admin and user roles with different permissions
+- 📊 **Complete CRUD Operations** - Full create, read, update, delete functionality
+- 🔍 **Advanced Search & Filtering** - Search across all entities with powerful filtering
+- 📄 **Pagination Support** - Efficient pagination with configurable page sizes (limit=10, page=0)
+- 📚 **Swagger Documentation** - Interactive API documentation with examples
+- 🏗️ **Clean Architecture** - Domain-driven design with separation of concerns
+- 🛡️ **Input Validation** - Comprehensive request validation using class-validator
+- 🗄️ **PostgreSQL Integration** - Production-grade database with TypeORM
+- 🐳 **Docker Support** - Containerized deployment ready
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- pnpm
+- PostgreSQL 17
+- Docker (optional)
+
+### Installation
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone <repository-url>
+   cd project-management-api
+   ```
+
+2. **Install dependencies:**
+
+   ```bash
+   pnpm install
+   ```
+
+3. **Environment Configuration:**
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   Configure your environment variables:
+
+   ```env
+   # Application
+   APP_PORT=3000
+   NODE_ENV=development
+
+   # Database
+   DATABASE_HOST=localhost
+   DATABASE_PORT=5432
+   DATABASE_NAME=project_management
+   DATABASE_USER=postgres
+   DATABASE_PASSWORD=your_password
+   DATABASE_SSL=true
+
+   # JWT
+   JWT_SECRET=your-super-secret-jwt-key
+   JWT_EXPIRES_IN=7d
+   ```
+
+4. **Database Setup:**
+
+   ```bash
+   # Using Docker (recommended for development)
+   docker run --name postgres-pm \
+     -e POSTGRES_PASSWORD=your_password \
+     -e POSTGRES_DB=project_management \
+     -p 5432:5432 \
+     -d postgres:17
+   ```
+
+5. **Start the application:**
+
+   ```bash
+   # Development mode with hot reload
+   pnpm run start:dev
+
+   # Production mode
+   pnpm run build
+   pnpm run start:prod
+   ```
+
+6. **Access the API:**
+
+   - **API:** <http://localhost:3000>
+   - **Documentation:** <http://localhost:3000/api/docs>
+
+## 📚 API Documentation
+
+### Swagger UI
+
+The API includes comprehensive Swagger documentation available at:
+
+- **🌍 Production:** [https://api.thorium-technologies.com/api/docs](https://api.thorium-technologies.com/api/docs)
+- **🔧 Local:** <http://localhost:3000/api/docs>
+
+### Authentication
+
+The API uses JWT Bearer token authentication. To access protected endpoints:
+
+1. **Login** to get a JWT token:
+
+   ```bash
+   POST /api/auth/login
+   {
+     "email": "admin@example.com",
+     "password": "password"
+   }
+   ```
+
+2. **Use the token** in subsequent requests:
+
+   ```bash
+   Authorization: Bearer <your-jwt-token>
+   ```
+
+3. **In Swagger UI**: Click the "Authorize" button and enter your token.
+
+### Core Endpoints
+
+| Module | Endpoint | Description |
+|--------|----------|-------------|
+| **Authentication** | `/api/auth` | User authentication & management |
+| **Clients** | `/api/clients` | Client management operations |
+| **Employees** | `/api/employees` | Employee management operations |
+| **Projects** | `/api/projects` | Project management operations |
+| **Tasks** | `/api/tasks` | Task management operations |
+| **Assignments** | `/api/assignments` | Project-employee assignments |
+
+### Pagination
+
+All GET endpoints support pagination with query parameters:
+
+- `limit` (default: 10) - Number of items per page
+- `page` (default: 0) - Page number (0-based)
+- `search` (optional) - Search term for filtering
+
+Example:
 
 ```bash
-$ pnpm install
+GET /api/projects?limit=20&page=1&search=website
 ```
 
-## Compile and run the project
+## 🔧 Development Scripts
 
 ```bash
-# development
-$ pnpm run start
+# Development
+pnpm run start:dev          # Start with hot reload
+pnpm run start:debug        # Start in debug mode
 
-# watch mode
-$ pnpm run start:dev
+# Building
+pnpm run build              # Build for production
+pnpm run start:prod         # Start production build
 
-# production mode
-$ pnpm run start:prod
+# Code Quality
+pnpm run lint               # Run ESLint
+pnpm run format             # Format code with Prettier
+
+# Testing
+pnpm run test               # Run unit tests
+pnpm run test:watch         # Run tests in watch mode
+pnpm run test:cov           # Run tests with coverage
+pnpm run test:e2e           # Run end-to-end tests
 ```
 
-## Run tests
+## 🏗️ Architecture
+
+This API follows Clean Architecture principles with a hexagonal architecture approach:
+
+``` bash
+src/
+├── contexts/                    # Domain contexts (bounded contexts)
+│   ├── auth/                   # Authentication & User Management
+│   ├── clients/                # Client Management
+│   ├── employees/              # Employee Management
+│   ├── projects/               # Project Management
+│   ├── tasks/                  # Task Management
+│   ├── assignments/            # Project-Employee Assignments
+│   └── shared/                 # Shared domain logic
+│       ├── application/        # Application services & repositories
+│       ├── domain/            # Domain entities & interfaces
+│       └── infrastructure/    # External concerns (DB, HTTP, etc.)
+└── main.ts                    # Application entry point
+```
+
+## 🐳 Docker Deployment
+
+### Build Image
 
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+docker build -t project-management-api .
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Run Container
 
 ```bash
-$ pnpm install -g mau
-$ mau deploy
+docker run -d \
+  --name pm-api \
+  -p 3000:3000 \
+  -e DATABASE_HOST=your-db-host \
+  -e DATABASE_PASSWORD=your-password \
+  -e JWT_SECRET=your-secret \
+  project-management-api
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## 🔒 Security Features
 
-## Resources
+### Authentication & Authorization
 
-Check out a few resources that may come in handy when working with NestJS:
+- **JWT Tokens** - Secure, stateless authentication
+- **Role-Based Access** - Admin and user roles with different permissions
+- **Route Protection** - Decorators for endpoint security
+- **Input Validation** - Comprehensive request validation
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### Security Best Practices
 
-## Support
+- Passwords are hashed using bcrypt
+- JWT tokens have configurable expiration
+- SQL injection protection via TypeORM
+- Input sanitization and validation
+- CORS enabled for cross-origin requests
+- SSL/TLS encryption support
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## 🚀 Production Deployment
 
-## Stay in touch
+The API is currently deployed and accessible at:
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+**🌍 Production URL:** [https://api.thorium-technologies.com](https://api.thorium-technologies.com)
 
-## License
+**📚 Live Documentation:** [https://api.thorium-technologies.com/api/docs](https://api.thorium-technologies.com/api/docs)
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### Infrastructure Features
+
+- **Platform:** Cloud deployment with SSL certificates
+- **Database:** PostgreSQL 17 with connection pooling
+- **Container:** Docker-based deployment
+- **Monitoring:** Health checks and structured logging
+- **Security:** HTTPS encryption and secure authentication
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit changes: `git commit -m 'Add amazing feature'`
+4. Push to branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🆘 Support
+
+- **📚 Documentation:** [https://api.thorium-technologies.com/api/docs](https://api.thorium-technologies.com/api/docs)
+- **🐛 Issues:** Create an issue in this repository
+- **🧪 API Testing:** Use the live Swagger documentation
+
+---
+
+**Built with ❤️ using NestJS, TypeScript, and PostgreSQL**
