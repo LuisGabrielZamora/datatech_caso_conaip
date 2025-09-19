@@ -12,7 +12,6 @@ print_status "Building the app service"
 docker compose -f ./project-management-api/docker-compose.yaml build
 
 print_status "Running the app service in detach mode"
-# docker compose -f ./project-management-api/docker-compose.yaml up -d
-docker compose -f ./project-management-api/docker-compose.yaml up
+docker compose -f ./project-management-api/docker-compose.yaml up -d
 
 print_status "Application setup complete!"
