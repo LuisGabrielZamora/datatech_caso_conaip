@@ -18,7 +18,7 @@ sudo openssl req -x509 -nodes -newkey rsa:2048 \
   -days 30 \
   -subj "/CN=api.thorium-technologies.com"
 
-# Write the Nginx vhost (CORS + preflight + proxy to :8000)
+# Write the Nginx vhost (CORS + preflight + proxy to :3000)
 sudo tee /etc/nginx/sites-available/api.thorium-technologies.com.conf >/dev/null <<'NGINX'
 server {
   listen 80;
@@ -50,7 +50,7 @@ server {
   set $cors_origin "*";
   if ($http_origin != "") { set $cors_origin $http_origin; }
 
-  # ===== API (proxy to NestJS :8000) =====
+  # ===== API (proxy to NestJS :3000) =====
   location / {
     # Preflight
     if ($request_method = OPTIONS) {
@@ -69,7 +69,7 @@ server {
     add_header Access-Control-Allow-Credentials "true" always;
     add_header Access-Control-Expose-Headers "Content-Length, Content-Type, Authorization" always;
 
-    proxy_pass         http://127.0.0.1:8000;
+    proxy_pass         http://127.0.0.1:3000;
     proxy_http_version 1.1;
     proxy_set_header   Host              $host;
     proxy_set_header   X-Real-IP         $remote_addr;
@@ -86,7 +86,7 @@ server {
     add_header Vary "Origin" always;
     add_header Access-Control-Allow-Credentials "true" always;
 
-    proxy_pass http://127.0.0.1:8000;
+    proxy_pass http://127.0.0.1:3000;
     proxy_http_version 1.1;
     proxy_set_header Upgrade $http_upgrade;
     proxy_set_header Connection "upgrade";
