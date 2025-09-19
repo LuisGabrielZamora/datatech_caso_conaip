@@ -6,11 +6,6 @@ export const TaskResources = {
     isActive: false,
   },
   FILTER_OR_FIELDS: [
-    'description',
-    'startDate',
-    'endDate',
-    'projectId',
-    'assigneeEmployeeId',
-    'supervisorId',
+    'description'
   ],
 };

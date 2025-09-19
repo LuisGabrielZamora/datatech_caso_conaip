@@ -5,5 +5,5 @@ export const ProjectResources = {
     uniqueField: 'name',
     isActive: false,
   },
-  FILTER_OR_FIELDS: ['name', 'description', 'startDate', 'endDate', 'clientId'],
+  FILTER_OR_FIELDS: ['name', 'description'],
 };

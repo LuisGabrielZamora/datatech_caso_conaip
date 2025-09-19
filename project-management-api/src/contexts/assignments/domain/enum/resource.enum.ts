@@ -5,11 +5,5 @@ export const AssignmentResources = {
     uniqueField: 'projectId',
     isActive: false,
   },
-  FILTER_OR_FIELDS: [
-    'projectId',
-    'employeeId',
-    'assignmentDate',
-    'supervisorId',
-    'taskId',
-  ],
+  FILTER_OR_FIELDS: [],
 };
