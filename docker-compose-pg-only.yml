@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16.3-alpine3.19
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: rootpass
+      POSTGRES_DB: datatech_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+  
+  pg-admin:
+    depends_on:
+      - postgres
+    image: dpage/pgadmin4:8.12
+    container_name: pg-admin
+    restart: always
+    ports:
+      - "5050:80"
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: rootpass
+      POSTGRES_DB: datatech_db
+
+  # NestJS Ingestion App
+  # nest:
+  #   build:
+  #     context: ./nest-ingest
+  #     dockerfile: Dockerfile
+  #   container_name: nest_ingest
+  #   ports:
+  #     - "4000:4000"
+  #   environment:
+  #     PORT: 4000
+  #     MYSQL_HOST: mysql
+  #     MYSQL_PORT: 3306
+  #     MYSQL_USER: root
+  #     MYSQL_PASS: rootpass
+  #     MYSQL_DB: testdb
+  #     MARIADB_HOST: mariadb
+  #     MARIADB_PORT: 3306
+  #     MARIADB_USER: root
+  #     MARIADB_PASS: rootpass
+  #     MARIADB_DB: testdb
+  #     PG_HOST: postgres
+  #     PG_PORT: 5432
+  #     PG_USER: postgres
+  #     PG_PASS: rootpass
+  #     PG_DB: testdb
+  #     MSSQL_HOST: mssql
+  #     MSSQL_PORT: 1433
+  #     MSSQL_USER: sa
+  #     MSSQL_PASS: YourStrong!Passw0rd
+  #     MSSQL_DB: testdb
+  #   depends_on:
+  #     mysql:
+  #       condition: service_healthy
+  #     mariadb:
+  #       condition: service_healthy
+  #     postgres:
+  #       condition: service_healthy
+  #     mssql:
+  #       condition: service_healthy
+
+volumes:
+  mssql_data:

@@ -1,0 +1,10 @@
+# Local Postgres data
+postgres_data/
+postgres_data/*
+!postgres_data/.keep   # optional: keep a placeholder if you want the folder tracked
+
+# Common Postgres artifacts
+*.sql
+*.sql.gz
+*.dump
+*.backup
