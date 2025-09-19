@@ -13,7 +13,7 @@ import { Roles } from '../enum';
 export class CreateUserDto {
   @ApiProperty({
     description: 'User full name',
-    example: 'John Doe'
+    example: 'John Doe',
   })
   @IsString()
   @MinLength(1)
@@ -21,7 +21,7 @@ export class CreateUserDto {
 
   @ApiProperty({
     description: 'User email address',
-    example: 'john.doe@example.com'
+    example: 'john.doe@example.com',
   })
   @IsString()
   @MinLength(3)
@@ -30,8 +30,9 @@ export class CreateUserDto {
   email: string;
 
   @ApiProperty({
-    description: 'User password (minimum 8 characters, must contain uppercase, lowercase and number)',
-    example: 'Password123'
+    description:
+      'User password (minimum 8 characters, must contain uppercase, lowercase and number)',
+    example: 'Password123',
   })
   @IsString()
   @MinLength(8)
@@ -45,7 +46,7 @@ export class CreateUserDto {
   @ApiProperty({
     description: 'User role',
     example: 'user',
-    enum: [Roles.admin, Roles.user]
+    enum: [Roles.admin, Roles.user],
   })
   @IsIn([Roles.admin, Roles.user])
   @IsString()

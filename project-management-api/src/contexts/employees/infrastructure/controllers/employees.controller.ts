@@ -1,5 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { MasterController } from 'src/contexts/shared/infrastructure';
 import { Employee } from '../../domain/entities/employee.entity';
 import { EmployeeRepository } from '../repositories/employee.repository';
@@ -19,7 +34,11 @@ export class EmployeesController extends MasterController<Employee> {
     _repository: EmployeeRepository,
     private readonly service: EmployeesService,
   ) {
-    super(_repository, EmployeeResources.FILTER_OR_FIELDS, EmployeeResources.ENTITY_RELATIONS);
+    super(
+      _repository,
+      EmployeeResources.FILTER_OR_FIELDS,
+      EmployeeResources.ENTITY_RELATIONS,
+    );
     this._repository = _repository;
   }
 
@@ -42,7 +61,10 @@ export class EmployeesController extends MasterController<Employee> {
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Employee not found' })
-  update(@Param('id') id: string, @Body() updateEmployeeDto: UpdateEmployeeDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateEmployeeDto: UpdateEmployeeDto,
+  ) {
     return this._repository.updateEntity(id, updateEmployeeDto);
   }
 
@@ -53,16 +75,33 @@ export class EmployeesController extends MasterController<Employee> {
   @ApiResponse({ status: 200, description: 'Employees retrieved successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Department not found' })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    description: 'Number of items to return per page',
+    example: 10,
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Page number (0-based)',
+    example: 0,
+  })
   getEmployeesByDepartment(
     @Param('department') department: string,
-    @Query() { page, limit }: RequestPaginatorDto
+    @Query() { page, limit }: RequestPaginatorDto,
   ) {
     return this.service.getEmployeesByDepartment(department, page, limit);
   }
 
   @Post('seed')
   @ApiOperation({ summary: 'Seed employee data' })
-  @ApiResponse({ status: 200, description: 'Employee data seeded successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Employee data seeded successfully',
+  })
   @ApiResponse({ status: 400, description: 'Bad request' })
   seed() {
     return this.service.seed();

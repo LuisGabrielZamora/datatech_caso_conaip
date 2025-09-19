@@ -8,14 +8,17 @@ export class TasksService {
   @Inject(ErrorHandlerService)
   private readonly errorHandlerService: ErrorHandlerService;
 
-  constructor(private readonly repository: TaskRepository) { }
+  constructor(private readonly repository: TaskRepository) {}
 
   async seed() {
     try {
       // TODO: Implement seeding logic here
       // return await this.repository.seed(TaskSeed);
     } catch (error) {
-      this.errorHandlerService.handleDatabaseErrors(error, CUSTOM_MESSAGES.onCreateError.description);
+      this.errorHandlerService.handleDatabaseErrors(
+        error,
+        CUSTOM_MESSAGES.onCreateError.description,
+      );
     }
   }
 
@@ -23,23 +26,48 @@ export class TasksService {
     try {
       return await this.repository.findByProjectId(projectId, page, limit);
     } catch (error) {
-      this.errorHandlerService.handleDatabaseErrors(error, CUSTOM_MESSAGES.notFoundBy.description);
+      this.errorHandlerService.handleDatabaseErrors(
+        error,
+        CUSTOM_MESSAGES.notFoundBy.description,
+      );
     }
   }
 
-  async getTasksByAssignee(assigneeEmployeeId: string, page: number, limit: number) {
+  async getTasksByAssignee(
+    assigneeEmployeeId: string,
+    page: number,
+    limit: number,
+  ) {
     try {
-      return await this.repository.findByAssigneeId(assigneeEmployeeId, page, limit);
+      return await this.repository.findByAssigneeId(
+        assigneeEmployeeId,
+        page,
+        limit,
+      );
     } catch (error) {
-      this.errorHandlerService.handleDatabaseErrors(error, CUSTOM_MESSAGES.notFoundBy.description);
+      this.errorHandlerService.handleDatabaseErrors(
+        error,
+        CUSTOM_MESSAGES.notFoundBy.description,
+      );
     }
   }
 
-  async getTasksBySupervisor(supervisorId: string, page: number, limit: number) {
+  async getTasksBySupervisor(
+    supervisorId: string,
+    page: number,
+    limit: number,
+  ) {
     try {
-      return await this.repository.findBySupervisorId(supervisorId, page, limit);
+      return await this.repository.findBySupervisorId(
+        supervisorId,
+        page,
+        limit,
+      );
     } catch (error) {
-      this.errorHandlerService.handleDatabaseErrors(error, CUSTOM_MESSAGES.notFoundBy.description);
+      this.errorHandlerService.handleDatabaseErrors(
+        error,
+        CUSTOM_MESSAGES.notFoundBy.description,
+      );
     }
   }
 }

@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16.3-alpine3.19
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: rootpass
+      POSTGRES_DB: datatech_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+
+  pg-admin:
+    depends_on:
+      - postgres
+    image: dpage/pgadmin4:8.12
+    container_name: pg-admin
+    restart: always
+    ports:
+      - "5050:80"
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: rootpass
+      POSTGRES_DB: datatech_db
+
+volumes:
+  postgres_data:

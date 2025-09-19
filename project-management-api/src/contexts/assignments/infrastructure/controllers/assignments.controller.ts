@@ -1,5 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { MasterController } from 'src/contexts/shared/infrastructure';
 import { Assignment } from '../../domain/entities/assignment.entity';
 import { AssignmentRepository } from '../repositories/assignment.repository';
@@ -19,7 +34,11 @@ export class AssignmentsController extends MasterController<Assignment> {
     _repository: AssignmentRepository,
     private readonly service: AssignmentsService,
   ) {
-    super(_repository, AssignmentResources.FILTER_OR_FIELDS, AssignmentResources.ENTITY_RELATIONS);
+    super(
+      _repository,
+      AssignmentResources.FILTER_OR_FIELDS,
+      AssignmentResources.ENTITY_RELATIONS,
+    );
     this._repository = _repository;
   }
 
@@ -42,7 +61,10 @@ export class AssignmentsController extends MasterController<Assignment> {
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Assignment not found' })
-  update(@Param('id') id: string, @Body() updateAssignmentDto: UpdateAssignmentDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateAssignmentDto: UpdateAssignmentDto,
+  ) {
     return this._repository.updateEntity(id, updateAssignmentDto);
   }
 
@@ -50,12 +72,29 @@ export class AssignmentsController extends MasterController<Assignment> {
   @Auth(Roles.admin)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Get assignments by project ID' })
-  @ApiResponse({ status: 200, description: 'Assignments retrieved successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Assignments retrieved successfully',
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Project not found' })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    description: 'Number of items to return per page',
+    example: 10,
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Page number (0-based)',
+    example: 0,
+  })
   getAssignmentsByProject(
     @Param('projectId') projectId: string,
-    @Query() { page, limit }: RequestPaginatorDto
+    @Query() { page, limit }: RequestPaginatorDto,
   ) {
     return this.service.getAssignmentsByProject(projectId, page, limit);
   }
@@ -64,12 +103,29 @@ export class AssignmentsController extends MasterController<Assignment> {
   @Auth(Roles.admin)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Get assignments by employee ID' })
-  @ApiResponse({ status: 200, description: 'Assignments retrieved successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Assignments retrieved successfully',
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Employee not found' })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    description: 'Number of items to return per page',
+    example: 10,
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Page number (0-based)',
+    example: 0,
+  })
   getAssignmentsByEmployee(
     @Param('employeeId') employeeId: string,
-    @Query() { page, limit }: RequestPaginatorDto
+    @Query() { page, limit }: RequestPaginatorDto,
   ) {
     return this.service.getAssignmentsByEmployee(employeeId, page, limit);
   }
@@ -78,12 +134,29 @@ export class AssignmentsController extends MasterController<Assignment> {
   @Auth(Roles.admin)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Get assignments by task ID' })
-  @ApiResponse({ status: 200, description: 'Assignments retrieved successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Assignments retrieved successfully',
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Task not found' })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    description: 'Number of items to return per page',
+    example: 10,
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Page number (0-based)',
+    example: 0,
+  })
   getAssignmentsByTask(
     @Param('taskId') taskId: string,
-    @Query() { page, limit }: RequestPaginatorDto
+    @Query() { page, limit }: RequestPaginatorDto,
   ) {
     return this.service.getAssignmentsByTask(taskId, page, limit);
   }
@@ -92,19 +165,39 @@ export class AssignmentsController extends MasterController<Assignment> {
   @Auth(Roles.admin)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Get assignments by supervisor ID' })
-  @ApiResponse({ status: 200, description: 'Assignments retrieved successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Assignments retrieved successfully',
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Supervisor not found' })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    description: 'Number of items to return per page',
+    example: 10,
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Page number (0-based)',
+    example: 0,
+  })
   getAssignmentsBySupervisor(
     @Param('supervisorId') supervisorId: string,
-    @Query() { page, limit }: RequestPaginatorDto
+    @Query() { page, limit }: RequestPaginatorDto,
   ) {
     return this.service.getAssignmentsBySupervisor(supervisorId, page, limit);
   }
 
   @Post('seed')
   @ApiOperation({ summary: 'Seed assignment data' })
-  @ApiResponse({ status: 200, description: 'Assignment data seeded successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Assignment data seeded successfully',
+  })
   @ApiResponse({ status: 400, description: 'Bad request' })
   seed() {
     return this.service.seed();

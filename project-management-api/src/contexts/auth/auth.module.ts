@@ -19,7 +19,13 @@ export const CustomPassportModule = PassportModule.register({
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, SecurityService, AuthRepository, JwtStrategy, ErrorHandlerService],
+  providers: [
+    AuthService,
+    SecurityService,
+    AuthRepository,
+    JwtStrategy,
+    ErrorHandlerService,
+  ],
   imports: [
     ConfigModule,
     TypeOrmModule.forFeature([User]),

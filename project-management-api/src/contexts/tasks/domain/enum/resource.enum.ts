@@ -5,5 +5,12 @@ export const TaskResources = {
     uniqueField: 'description',
     isActive: false,
   },
-  FILTER_OR_FIELDS: ['description', 'startDate', 'endDate', 'projectId', 'assigneeEmployeeId', 'supervisorId'],
+  FILTER_OR_FIELDS: [
+    'description',
+    'startDate',
+    'endDate',
+    'projectId',
+    'assigneeEmployeeId',
+    'supervisorId',
+  ],
 };

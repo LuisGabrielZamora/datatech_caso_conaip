@@ -1,5 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { MasterController } from 'src/contexts/shared/infrastructure';
 import { Task } from '../../domain/entities/task.entity';
 import { TaskRepository } from '../repositories/task.repository';
@@ -19,7 +34,11 @@ export class TasksController extends MasterController<Task> {
     _repository: TaskRepository,
     private readonly service: TasksService,
   ) {
-    super(_repository, TaskResources.FILTER_OR_FIELDS, TaskResources.ENTITY_RELATIONS);
+    super(
+      _repository,
+      TaskResources.FILTER_OR_FIELDS,
+      TaskResources.ENTITY_RELATIONS,
+    );
     this._repository = _repository;
   }
 
@@ -53,9 +72,23 @@ export class TasksController extends MasterController<Task> {
   @ApiResponse({ status: 200, description: 'Tasks retrieved successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Project not found' })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    description: 'Number of items to return per page',
+    example: 10,
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Page number (0-based)',
+    example: 0,
+  })
   getTasksByProject(
     @Param('projectId') projectId: string,
-    @Query() { page, limit }: RequestPaginatorDto
+    @Query() { page, limit }: RequestPaginatorDto,
   ) {
     return this.service.getTasksByProject(projectId, page, limit);
   }
@@ -67,9 +100,23 @@ export class TasksController extends MasterController<Task> {
   @ApiResponse({ status: 200, description: 'Tasks retrieved successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Employee not found' })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    description: 'Number of items to return per page',
+    example: 10,
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Page number (0-based)',
+    example: 0,
+  })
   getTasksByAssignee(
     @Param('assigneeEmployeeId') assigneeEmployeeId: string,
-    @Query() { page, limit }: RequestPaginatorDto
+    @Query() { page, limit }: RequestPaginatorDto,
   ) {
     return this.service.getTasksByAssignee(assigneeEmployeeId, page, limit);
   }
@@ -81,9 +128,23 @@ export class TasksController extends MasterController<Task> {
   @ApiResponse({ status: 200, description: 'Tasks retrieved successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Supervisor not found' })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    description: 'Number of items to return per page',
+    example: 10,
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Page number (0-based)',
+    example: 0,
+  })
   getTasksBySupervisor(
     @Param('supervisorId') supervisorId: string,
-    @Query() { page, limit }: RequestPaginatorDto
+    @Query() { page, limit }: RequestPaginatorDto,
   ) {
     return this.service.getTasksBySupervisor(supervisorId, page, limit);
   }

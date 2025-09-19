@@ -22,14 +22,16 @@ async function bootstrap() {
   // Swagger configuration
   const config = new DocumentBuilder()
     .setTitle('Project Management API')
-    .setDescription('API for managing projects, tasks, employees, clients and assignments')
+    .setDescription(
+      'API for managing projects, tasks, employees, clients and assignments',
+    )
     .setVersion('1.0')
     .addBearerAuth(
       {
         type: 'http',
         scheme: 'bearer',
         bearerFormat: 'JWT',
-        name: 'JWT',
+        name: 'Authorization',
         description: 'Enter JWT token',
         in: 'header',
       },

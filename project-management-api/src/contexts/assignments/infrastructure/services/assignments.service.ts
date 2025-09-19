@@ -8,30 +8,47 @@ export class AssignmentsService {
   @Inject(ErrorHandlerService)
   private readonly errorHandlerService: ErrorHandlerService;
 
-  constructor(private readonly repository: AssignmentRepository) { }
+  constructor(private readonly repository: AssignmentRepository) {}
 
   async seed() {
     try {
       // TODO: Implement seeding logic here
       // return await this.repository.seed(AssignmentSeed);
     } catch (error) {
-      this.errorHandlerService.handleDatabaseErrors(error, CUSTOM_MESSAGES.onCreateError.description);
+      this.errorHandlerService.handleDatabaseErrors(
+        error,
+        CUSTOM_MESSAGES.onCreateError.description,
+      );
     }
   }
 
-  async getAssignmentsByProject(projectId: string, page: number, limit: number) {
+  async getAssignmentsByProject(
+    projectId: string,
+    page: number,
+    limit: number,
+  ) {
     try {
       return await this.repository.findByProjectId(projectId, page, limit);
     } catch (error) {
-      this.errorHandlerService.handleDatabaseErrors(error, CUSTOM_MESSAGES.notFoundBy.description);
+      this.errorHandlerService.handleDatabaseErrors(
+        error,
+        CUSTOM_MESSAGES.notFoundBy.description,
+      );
     }
   }
 
-  async getAssignmentsByEmployee(employeeId: string, page: number, limit: number) {
+  async getAssignmentsByEmployee(
+    employeeId: string,
+    page: number,
+    limit: number,
+  ) {
     try {
       return await this.repository.findByEmployeeId(employeeId, page, limit);
     } catch (error) {
-      this.errorHandlerService.handleDatabaseErrors(error, CUSTOM_MESSAGES.notFoundBy.description);
+      this.errorHandlerService.handleDatabaseErrors(
+        error,
+        CUSTOM_MESSAGES.notFoundBy.description,
+      );
     }
   }
 
@@ -39,15 +56,29 @@ export class AssignmentsService {
     try {
       return await this.repository.findByTaskId(taskId, page, limit);
     } catch (error) {
-      this.errorHandlerService.handleDatabaseErrors(error, CUSTOM_MESSAGES.notFoundBy.description);
+      this.errorHandlerService.handleDatabaseErrors(
+        error,
+        CUSTOM_MESSAGES.notFoundBy.description,
+      );
     }
   }
 
-  async getAssignmentsBySupervisor(supervisorId: string, page: number, limit: number) {
+  async getAssignmentsBySupervisor(
+    supervisorId: string,
+    page: number,
+    limit: number,
+  ) {
     try {
-      return await this.repository.findBySupervisorId(supervisorId, page, limit);
+      return await this.repository.findBySupervisorId(
+        supervisorId,
+        page,
+        limit,
+      );
     } catch (error) {
-      this.errorHandlerService.handleDatabaseErrors(error, CUSTOM_MESSAGES.notFoundBy.description);
+      this.errorHandlerService.handleDatabaseErrors(
+        error,
+        CUSTOM_MESSAGES.notFoundBy.description,
+      );
     }
   }
 }

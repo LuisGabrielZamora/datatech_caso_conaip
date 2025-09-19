@@ -9,7 +9,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
 import { User } from '../../domain/entities';
 import { AuthRepository } from '../repositories';
 import {
@@ -43,12 +43,9 @@ export class AuthController extends MasterController<User> {
   }
 
   @Post('register')
-  @Auth(Roles.admin)
-  @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Register a new user' })
   @ApiResponse({ status: 201, description: 'User successfully created' })
   @ApiResponse({ status: 400, description: 'Bad request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
   create(@Body() createAuthDto: CreateUserDto) {
     return this._repository.create(createAuthDto);
   }
@@ -81,20 +78,40 @@ export class AuthController extends MasterController<User> {
 
   @Get()
   @Auth(Roles.admin)
-  @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({ status: 200, description: 'Users retrieved successfully' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    description: 'Number of items to return per page',
+    example: 10,
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Page number (0-based)',
+    example: 0,
+  })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    type: String,
+    description: 'Search term to filter results',
+    example: '',
+  })
   findAll(@Query() paginationDto: RequestPaginatorDto) {
-    return this._repository.findAll(paginationDto);
+    return this._repository.findAll({
+      ...paginationDto,
+      search: paginationDto.search || '',
+    });
   }
 
   @Get(':id')
   @Auth(Roles.admin)
-  @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Get user by ID' })
   @ApiResponse({ status: 200, description: 'User retrieved successfully' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'User not found' })
   findOne(@Param('id') id: string) {
     return this._repository.findOne(id);
@@ -102,11 +119,9 @@ export class AuthController extends MasterController<User> {
 
   @Patch(':id')
   @Auth(Roles.admin)
-  @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Update user' })
   @ApiResponse({ status: 200, description: 'User updated successfully' })
   @ApiResponse({ status: 400, description: 'Bad request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'User not found' })
   update(@Param('id') id: string, @Body() updateAuthDto: UpdateUserDto) {
     return this._repository.update(id, updateAuthDto);
@@ -114,10 +129,8 @@ export class AuthController extends MasterController<User> {
 
   @Delete(':id')
   @Auth(Roles.admin)
-  @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Delete user' })
   @ApiResponse({ status: 200, description: 'User deleted successfully' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'User not found' })
   removeEntity(@Param('id') id: string) {
     return this._repository.remove(id);

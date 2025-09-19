@@ -1,5 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { MasterController } from 'src/contexts/shared/infrastructure';
 import { Client } from '../../domain/entities/client.entity';
 import { ClientRepository } from '../repositories/client.repository';
@@ -18,28 +31,28 @@ export class ClientsController extends MasterController<Client> {
     _repository: ClientRepository,
     private readonly service: ClientsService,
   ) {
-    super(_repository, ClientResources.FILTER_OR_FIELDS, ClientResources.ENTITY_RELATIONS);
+    super(
+      _repository,
+      ClientResources.FILTER_OR_FIELDS,
+      ClientResources.ENTITY_RELATIONS,
+    );
     this._repository = _repository;
   }
 
   @Post()
   @Auth(Roles.admin)
-  @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Create a new client' })
   @ApiResponse({ status: 201, description: 'Client successfully created' })
   @ApiResponse({ status: 400, description: 'Bad request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
   create(@Body() createClientDto: CreateClientDto) {
     return this._repository.createEntity(createClientDto);
   }
 
   @Patch(':id')
   @Auth(Roles.admin)
-  @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Update client by ID' })
   @ApiResponse({ status: 200, description: 'Client updated successfully' })
   @ApiResponse({ status: 400, description: 'Bad request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Client not found' })
   update(@Param('id') id: string, @Body() updateClientDto: UpdateClientDto) {
     return this._repository.updateEntity(id, updateClientDto);

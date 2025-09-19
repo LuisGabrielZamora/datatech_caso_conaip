@@ -18,6 +18,12 @@ export class PgConnectionService implements TypeOrmOptionsFactory {
       autoLoadEntities: true,
       logging: true,
       synchronize: this.config.get<boolean>('database.synchronize'),
+      ssl: {
+        rejectUnauthorized: false, // For self-signed certificates
+      },
+      extra: {
+        sslmode: 'require',
+      },
     };
   }
 }

@@ -8,14 +8,17 @@ export class ClientsService {
   @Inject(ErrorHandlerService)
   private readonly errorHandlerService: ErrorHandlerService;
 
-  constructor(private readonly repository: ClientRepository) { }
+  constructor(private readonly repository: ClientRepository) {}
 
   async seed() {
     try {
       // TODO: Implement seeding logic here
       // return await this.repository.seed(ClientSeed);
     } catch (error) {
-      this.errorHandlerService.handleDatabaseErrors(error, CUSTOM_MESSAGES.onCreateError.description);
+      this.errorHandlerService.handleDatabaseErrors(
+        error,
+        CUSTOM_MESSAGES.onCreateError.description,
+      );
     }
   }
 }

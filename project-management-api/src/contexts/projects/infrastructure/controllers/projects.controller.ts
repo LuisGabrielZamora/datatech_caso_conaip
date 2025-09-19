@@ -1,5 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { MasterController } from 'src/contexts/shared/infrastructure';
 import { Project } from '../../domain/entities/project.entity';
 import { ProjectRepository } from '../repositories/project.repository';
@@ -19,7 +34,11 @@ export class ProjectsController extends MasterController<Project> {
     _repository: ProjectRepository,
     private readonly service: ProjectsService,
   ) {
-    super(_repository, ProjectResources.FILTER_OR_FIELDS, ProjectResources.ENTITY_RELATIONS);
+    super(
+      _repository,
+      ProjectResources.FILTER_OR_FIELDS,
+      ProjectResources.ENTITY_RELATIONS,
+    );
     this._repository = _repository;
   }
 
@@ -53,9 +72,23 @@ export class ProjectsController extends MasterController<Project> {
   @ApiResponse({ status: 200, description: 'Projects retrieved successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Client not found' })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    description: 'Number of items to return per page',
+    example: 10,
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Page number (0-based)',
+    example: 0,
+  })
   getProjectsByClient(
     @Param('clientId') clientId: string,
-    @Query() { page, limit }: RequestPaginatorDto
+    @Query() { page, limit }: RequestPaginatorDto,
   ) {
     return this.service.getProjectsByClient(clientId, page, limit);
   }
